@@ -17,12 +17,10 @@ USER root
 WORKDIR /go/src/github.com/eclipse/che-plugin-broker/brokers/artifacts/cmd/
 COPY . /go/src/github.com/eclipse/che-plugin-broker/
 RUN adduser appuser && \
-    dnf -y clean all && rm -rf /var/cache/yum && echo "Installed Packages" && rpm -qa | sort -V && echo "End Of Installed Packages" && \
     CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-w -s' -installsuffix cgo -o artifacts-broker main.go
 
-# to test this container by attaching bash shell, need a non-scratch base like ubi8-minimal
-# FROM registry.access.redhat.com/ubi8-minimal
-FROM scratch
+# https://access.redhat.com/containers/?tab=tags#/registry.access.redhat.com/ubi8-minimal
+FROM registry.access.redhat.com/ubi8-minimal:8.1-398
 
 USER appuser
 # CRW-528 copy actual cert
